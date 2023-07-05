@@ -2,15 +2,22 @@ name: Build Docker native image and push
 
 on:
   push:
-    branches:
-      - master
+    tags:
+        - "*" # build on all tags
 
 jobs:
   build:
     runs-on: ubuntu-latest
+
+    permissions:
+      id-token: write # need this for OIDC
+      contents: read
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+      - name: Set tag name to environment
+        run: echo "TAG_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
       - name: Setup GraalVM
         uses: graalvm/setup-graalvm@v1
         with:
@@ -24,6 +31,7 @@ jobs:
           native-image --version
           gu --version
           mvn --version
+          echo ${{ env.TAG_VERSION }}
       - name: Build native Docker image
         run: |
           mvn clean package -Dpackaging=docker-native
@@ -36,4 +44,6 @@ jobs:
       - name: Tag and push Docker image
         run: |
           docker tag httpproxy:latest ${{ secrets.REGISTRY_URL }}/httpproxy:latest
+          docker tag httpproxy:latest ${{ secrets.REGISTRY_URL }}/httpproxy:${{ env.TAG_VERSION }}
+          docker push ${{ secrets.REGISTRY_URL }}/httpproxy:${{ env.TAG_VERSION }}
           docker push ${{ secrets.REGISTRY_URL }}/httpproxy:latest
