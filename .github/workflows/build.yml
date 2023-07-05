@@ -1,0 +1,28 @@
+name: Build Docker native image and push
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Setup GraalVM
+        uses: graalvm/setup-graalvm@v0.3.2
+        with:
+          java-version: 17
+          component: native-image
+          cache: maven
+      - name: Print environment information
+        run: |
+          java -version
+          native-image --version
+          gu --version
+          mvn --version
+      - name: Build native Docker image
+        run: |
+          mvn clean package -Dpackaging=docker-native
