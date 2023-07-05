@@ -1,6 +1,9 @@
 micronaut:
   application:
     name: httpproxy
+  server:
+    cors:
+      enabled: true
 netty:
   default:
     allocator:

@@ -1,3 +1,20 @@
+# httpproxy
+
+## Run
+
+```mvn mn:run```
+
+## Build
+
+### Native binary
+
+```mvn package -Dpackaging=native-image```
+
+### Docker with native binary
+
+```mvn package -Dpackaging=docker-native```
+
+
 ## Micronaut 3.9.4 Documentation
 
 - [User Guide](https://docs.micronaut.io/3.9.4/guide/index.html)
