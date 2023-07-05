@@ -35,5 +35,5 @@ jobs:
           password: ${{ secrets.REGISTRY_PASSWORD }}
       - name: Tag and push Docker image
         run: |
-          docker tag httpproxy:latest ${{ secrets.REGISTRY_URL }}/${{ secrets.REPOSITORY_NAME }}:latest
-          docker push ${{ secrets.REGISTRY_URL }}/${{ secrets.REPOSITORY_NAME }}:latest
+          docker tag httpproxy:latest ${{ secrets.REGISTRY_URL }}/${{ GITHUB_REPOSITORY }}:latest
+          docker push ${{ secrets.REGISTRY_URL }}/${{ GITHUB_REPOSITORY }}:latest
